@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Verificador Serie B - Bolivia</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{
@@ -21,34 +21,59 @@
             background:var(--bg);color:var(--text);
             min-height:100vh;min-height:100dvh;
             display:flex;flex-direction:column;align-items:center;
-            padding:12px 16px 40px;
+            padding:0 0 40px;
             background-image:
                 radial-gradient(ellipse 60% 40% at 50% 0%,#d4a01708,transparent),
                 radial-gradient(circle at 80% 80%,#1e293b22,transparent);
         }
+        .wrapper{width:100%;max-width:500px;padding:12px 16px;display:flex;flex-direction:column;align-items:center}
 
-        .wrapper{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center}
-
+        /* Header */
+        .header{text-align:center;margin:16px 0 18px}
         .badge{
             display:inline-flex;align-items:center;gap:6px;
             background:var(--red-bg);border:1px solid #ef444440;
-            color:var(--red);font-size:.65rem;font-weight:700;
+            color:var(--red);font-size:.62rem;font-weight:700;
             padding:4px 12px;border-radius:100px;
             letter-spacing:.08em;text-transform:uppercase;
-            margin:16px 0 10px;
+            margin-bottom:10px;
         }
         .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-
         h1{
             font-family:'Space Mono',monospace;
-            font-size:clamp(1.2rem,4.5vw,1.6rem);
-            text-align:center;margin-bottom:4px;
+            font-size:clamp(1.15rem,4.2vw,1.55rem);
+            margin-bottom:4px;
             background:linear-gradient(135deg,#fff,var(--gold));
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         }
-        .subtitle{color:var(--text2);font-size:clamp(.75rem,2.5vw,.85rem);text-align:center;margin-bottom:20px;line-height:1.4}
+        .subtitle{color:var(--text2);font-size:clamp(.72rem,2.3vw,.82rem);line-height:1.4}
 
+        /* Steps guide */
+        .steps{
+            width:100%;display:flex;gap:4px;
+            margin-bottom:18px;
+        }
+        .step{
+            flex:1;text-align:center;padding:10px 6px;
+            background:var(--card);border:1px solid var(--border);
+            border-radius:10px;transition:all .3s;
+        }
+        .step.active{border-color:var(--gold);background:var(--card2)}
+        .step.done{border-color:var(--green);background:#14532d15}
+        .step-num{
+            width:22px;height:22px;border-radius:50%;
+            display:inline-flex;align-items:center;justify-content:center;
+            font-size:.65rem;font-weight:800;
+            background:var(--border);color:var(--text2);
+            margin-bottom:4px;transition:all .3s;
+        }
+        .step.active .step-num{background:var(--gold);color:#000}
+        .step.done .step-num{background:var(--green);color:#fff}
+        .step-label{display:block;font-size:clamp(.58rem,1.8vw,.68rem);color:var(--text2);font-weight:500;line-height:1.2}
+        .step.active .step-label{color:var(--text)}
+
+        /* Card */
         .card{
             background:var(--card);border:1px solid var(--border);
             border-radius:16px;padding:clamp(16px,4vw,24px);
@@ -56,73 +81,110 @@
             margin-bottom:14px;
         }
 
-        .context-box{
-            background:linear-gradient(135deg,#1e293b80,#1e293b40);
-            border:1px solid var(--border);border-radius:10px;
-            padding:12px 14px;margin-bottom:18px;
-            font-size:.76rem;line-height:1.55;color:var(--text2);
+        .field-group{margin-bottom:16px}
+        label{
+            display:flex;align-items:center;gap:6px;
+            font-size:clamp(.68rem,2vw,.74rem);font-weight:700;
+            color:var(--text2);letter-spacing:.04em;
+            text-transform:uppercase;margin-bottom:6px;
         }
-        .context-box strong{color:var(--gold)}
+        label .num{
+            width:20px;height:20px;border-radius:50%;
+            display:inline-flex;align-items:center;justify-content:center;
+            font-size:.6rem;background:var(--gold);color:#000;font-weight:800;
+        }
+        .hint{
+            font-size:clamp(.65rem,1.9vw,.72rem);
+            color:#6b7280;margin-bottom:8px;line-height:1.4;
+            padding-left:26px;
+        }
 
-        label{display:block;font-size:.7rem;font-weight:700;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-
-        select,input[type=number]{
-            width:100%;padding:clamp(10px,2.5vw,14px) 14px;
-            background:var(--card2);border:1px solid var(--border);
+        select{
+            width:100%;padding:clamp(12px,3vw,14px) 14px;
+            background:var(--card2);border:2px solid var(--border);
             border-radius:10px;color:var(--text);
-            font-size:clamp(.9rem,3vw,1.05rem);font-family:'DM Sans',sans-serif;
-            margin-bottom:14px;outline:none;transition:border .2s;
-            -moz-appearance:textfield;
+            font-size:clamp(.88rem,2.8vw,1rem);font-family:'DM Sans',sans-serif;
+            outline:none;transition:border .2s;
+            appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:right 14px center;
         }
-        select:focus,input:focus{border-color:var(--gold)}
-        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none}
-        input::placeholder{color:#4a5568}
+        select:focus{border-color:var(--gold)}
+
+        .serial-input-wrap{position:relative}
+        .serial-input{
+            width:100%;
+            padding:clamp(14px,3.5vw,18px) 14px;
+            background:var(--card2);border:2px solid var(--border);
+            border-radius:10px;color:var(--text);
+            font-size:clamp(1.1rem,4vw,1.4rem);
+            font-family:'Space Mono',monospace;
+            font-weight:700;letter-spacing:.15em;
+            outline:none;transition:border .2s;
+            text-align:center;
+        }
+        .serial-input:focus{border-color:var(--gold)}
+        .serial-input::placeholder{
+            color:#374151;font-size:clamp(.85rem,3vw,1rem);
+            letter-spacing:.08em;font-weight:400;
+        }
+        .char-count{
+            position:absolute;right:12px;top:50%;transform:translateY(-50%);
+            font-size:.7rem;color:#4b5563;font-weight:700;
+            font-family:'Space Mono',monospace;
+            pointer-events:none;transition:color .2s;
+        }
+        .char-count.complete{color:var(--green)}
+        .char-count.over{color:var(--red)}
 
         .btn-go{
-            width:100%;padding:clamp(14px,3vw,16px);border:none;border-radius:10px;
+            width:100%;padding:clamp(15px,3.5vw,18px);border:none;border-radius:12px;
             font-family:'DM Sans',sans-serif;
-            font-weight:700;font-size:clamp(.85rem,2.8vw,1rem);
+            font-weight:800;font-size:clamp(.9rem,3vw,1.05rem);
             cursor:pointer;transition:all .2s;
             background:linear-gradient(135deg,var(--gold),#b8860b);color:#000;
             display:flex;align-items:center;justify-content:center;gap:8px;
+            margin-top:4px;
+            letter-spacing:.02em;
         }
         .btn-go:hover{filter:brightness(1.1);transform:translateY(-1px)}
         .btn-go:active{transform:translateY(0);filter:brightness(.95)}
 
+        /* Result */
         .result{
-            margin-top:18px;padding:clamp(16px,3.5vw,22px);border-radius:12px;
-            text-align:center;font-weight:700;line-height:1.5;
-            display:none;animation:fadeUp .35s ease;
+            margin-top:18px;padding:clamp(18px,4vw,24px);border-radius:14px;
+            text-align:center;line-height:1.5;
+            display:none;animation:fadeUp .4s ease;
         }
-        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
         .result.danger{background:var(--red-bg);border:1px solid #ef444440;color:var(--red)}
         .result.safe{background:var(--green-bg);border:1px solid #22c55e40;color:var(--green)}
-        .result .icon{font-size:2rem;display:block;margin-bottom:4px}
-        .result .title-line{font-size:clamp(.85rem,2.8vw,1rem)}
-        .result .detail{font-weight:400;font-size:clamp(.72rem,2.2vw,.82rem);opacity:.85;margin-top:6px}
+        .result .icon{font-size:2.4rem;display:block;margin-bottom:6px}
+        .result .title-line{font-size:clamp(.88rem,2.8vw,1rem);font-weight:800;display:block}
+        .result .detail{font-weight:500;font-size:clamp(.74rem,2.2vw,.84rem);opacity:.85;margin-top:6px}
         .result .action{
-            margin-top:12px;padding:10px 14px;border-radius:8px;
+            margin-top:14px;padding:12px 14px;border-radius:10px;
             font-size:clamp(.7rem,2.1vw,.76rem);font-weight:500;
-            line-height:1.55;text-align:left;
+            line-height:1.6;text-align:left;
         }
         .result.danger .action{background:#7f1d1d20;color:#fca5a5}
         .result.safe .action{background:#14532d20;color:#86efac}
 
-        /* Info section */
+        /* Info */
         .info-card{
             background:var(--card);border:1px solid var(--border);
             border-radius:16px;padding:clamp(16px,4vw,20px);
             width:100%;box-shadow:0 10px 40px #0003;
         }
-        .info-card h3{font-size:.82rem;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+        .info-card h3{font-size:.8rem;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
         .info-item{
             padding:10px 0;border-bottom:1px solid var(--border);
-            font-size:clamp(.72rem,2.2vw,.8rem);line-height:1.6;color:var(--text2);
+            font-size:clamp(.7rem,2.1vw,.78rem);line-height:1.6;color:var(--text2);
         }
         .info-item:last-child{border-bottom:none}
         .info-item strong{color:var(--text);display:block;margin-bottom:2px}
         .tag{
-            display:inline-block;font-size:.6rem;font-weight:700;
+            display:inline-block;font-size:.58rem;font-weight:700;
             padding:2px 7px;border-radius:4px;margin-right:4px;
             letter-spacing:.04em;vertical-align:middle;
         }
@@ -131,51 +193,73 @@
         .tag-blue{background:#3b82f620;color:var(--blue)}
 
         .footer{
-            margin-top:20px;font-size:clamp(.6rem,1.8vw,.68rem);
+            margin-top:20px;font-size:clamp(.58rem,1.7vw,.66rem);
             color:#475569;text-align:center;line-height:1.5;
             padding:0 10px;
         }
 
-        /* Tablet+ */
-        @media(min-width:600px){
-            body{padding:24px 24px 50px}
-            .wrapper{max-width:500px}
-        }
-        /* Desktop */
-        @media(min-width:900px){
-            body{justify-content:center;padding:32px}
-            .wrapper{max-width:520px}
-        }
-        /* Very small phones */
-        @media(max-width:340px){
-            .card,.info-card{padding:14px;border-radius:12px}
-        }
+        @media(min-width:600px){.wrapper{max-width:520px;padding:16px 24px}}
+        @media(min-width:900px){body{justify-content:center}.wrapper{max-width:540px}}
+        @media(max-width:340px){.card,.info-card{padding:14px;border-radius:12px}.steps{gap:3px}}
     </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="badge">Alerta — Serie B Inhabilitada</div>
-    <h1>VERIFICADOR SERIE "B"</h1>
-    <p class="subtitle">Herramienta ciudadana para verificar billetes<br>Bs 10, Bs 20 y Bs 50 — Nueva Familia</p>
+    <div class="header">
+        <div class="badge">Alerta — Serie B Inhabilitada</div>
+        <h1>VERIFICADOR SERIE "B"</h1>
+        <p class="subtitle">Herramienta ciudadana para verificar billetes de Bs 10, Bs 20 y Bs 50</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="steps">
+        <div class="step active" id="step1">
+            <span class="step-num">1</span>
+            <span class="step-label">Elegí el corte</span>
+        </div>
+        <div class="step" id="step2">
+            <span class="step-num">2</span>
+            <span class="step-label">Ingresá la serie</span>
+        </div>
+        <div class="step" id="step3">
+            <span class="step-num">3</span>
+            <span class="step-label">Resultado</span>
+        </div>
+    </div>
 
     <div class="card">
-        <div class="context-box">
-            <strong>⚠ ¿Qué pasó?</strong><br>
-            El BCB inhabilitó con carácter inmediato todos los billetes de Bs 10, Bs 20 y Bs 50 de la Serie B (Nueva Familia) tras la sustracción ilegal de billetes. Esta herramienta te ayuda a verificar si tu billete está dentro de los intervalos sustraídos.
+        <!-- Field 1 -->
+        <div class="field-group">
+            <label><span class="num">1</span> ¿De cuánto es tu billete?</label>
+            <div class="hint">Mirá el número grande en tu billete (10, 20 o 50)</div>
+            <select id="tipoBillete" onchange="updateSteps()">
+                <option value="">— Seleccioná —</option>
+                <option value="bs10">Bs 10 (diez bolivianos)</option>
+                <option value="bs20">Bs 20 (veinte bolivianos)</option>
+                <option value="bs50">Bs 50 (cincuenta bolivianos)</option>
+            </select>
         </div>
 
-        <label>Denominación</label>
-        <select id="tipoBillete">
-            <option value="bs10">Bs 10 — Serie B</option>
-            <option value="bs20">Bs 20 — Serie B</option>
-            <option value="bs50">Bs 50 — Serie B</option>
-        </select>
+        <!-- Field 2 -->
+        <div class="field-group">
+            <label><span class="num">2</span> Número de serie (9 dígitos)</label>
+            <div class="hint">Buscá el número de 9 dígitos en tu billete. Empiezan con 0 (ejemplo: 087280145)</div>
+            <div class="serial-input-wrap">
+                <input 
+                    type="text" 
+                    id="serialInput" 
+                    class="serial-input" 
+                    placeholder="000000000"
+                    inputmode="numeric"
+                    maxlength="9"
+                    oninput="handleSerialInput(this)"
+                >
+                <span class="char-count" id="charCount">0/9</span>
+            </div>
+        </div>
 
-        <label>Número de serie del billete</label>
-        <input type="number" id="serialInput" placeholder="Ej: 87280145" inputmode="numeric">
-
-        <button class="btn-go" onclick="validarBillete()">VERIFICAR BILLETE ▸</button>
+        <button class="btn-go" onclick="validarBillete()">🔍 VERIFICAR MI BILLETE</button>
 
         <div class="result" id="result"></div>
     </div>
@@ -185,105 +269,185 @@
 
         <div class="info-item">
             <strong><span class="tag tag-red">INHABILITADOS</span> Bs 10, 20 y 50 Serie B</strong>
-            El BCB retiró de circulación estos tres cortes de la Serie B (Nueva Familia de Billetes del Boliviano) de forma inmediata. Ya no tienen validez legal para transacciones.
+            El BCB retiró de circulación estos tres cortes de la Serie B (Nueva Familia) de forma inmediata. Ya no tienen validez legal para transacciones.
         </div>
-
         <div class="info-item">
             <strong><span class="tag tag-green">CANJE</span> No perdés tu dinero</strong>
-            Si obtuviste tus billetes legalmente, podrás canjearlos en el sistema financiero por otros de igual valor. El BCB anunciará un calendario de canje. Bajo ninguna circunstancia perderás su valor.
+            Si obtuviste tus billetes legalmente, podrás canjearlos en el sistema financiero por otros de igual valor. El BCB anunciará un calendario de canje.
         </div>
-
         <div class="info-item">
             <strong><span class="tag tag-blue">OJO</span> Comercios ya los rechazan</strong>
-            Negocios en La Paz y El Alto ya no aceptan billetes Serie B, incluso de cortes no inhabilitados (Bs 100, Bs 200). Empresas como Fideos Famosa anunciaron que no los aceptarán en cumplimiento al comunicado del BCB.
+            Negocios en La Paz y El Alto ya no aceptan billetes Serie B. Empresas como Fideos Famosa anunciaron que no los aceptarán en cumplimiento al comunicado del BCB.
         </div>
-
         <div class="info-item">
-            <strong><span class="tag tag-red">SUSTRAÍDOS</span> Intervalos identificados</strong>
-            El BCB tiene la identificación y numeración exacta de todos los billetes que circulan legalmente y los que fueron sustraídos. Este verificador usa esos intervalos para ayudarte.
+            <strong><span class="tag tag-red">SUSTRAÍDOS</span> ¿Cómo funciona esto?</strong>
+            El BCB publicó los intervalos exactos de numeración de billetes sustraídos. Este verificador compara tu número de serie con esos intervalos para saber si tu billete fue robado o es legal.
         </div>
     </div>
 
     <div class="footer">
         Herramienta comunitaria con fines informativos. No es un sistema oficial del BCB.<br>
-        Los datos de intervalos provienen de fuentes públicas. Consultá con tu entidad financiera para el canje.
+        Intervalos tomados del comunicado oficial. Consultá con tu entidad financiera para el canje.
     </div>
 </div>
 
 <script>
+// =============================================
+// INTERVALOS CORREGIDOS SEGÚN FOTOS OFICIALES
+// =============================================
+// Imagen 1: CORTE Bs10
+// Imagen 2: CORTE Bs20
+// Imagen 3: CORTE Bs50
+
 const database = {
-    bs10:[
-        {f:77100001,t:77550000},{f:78000001,t:78450000},
-        {f:78900001,t:96350000},{f:96350001,t:96800000},
-        {f:96800001,t:97250000},{f:98150001,t:98600000},
-        {f:104900001,t:105350000},{f:105350001,t:105800000},
-        {f:106700001,t:107150000},{f:107600001,t:108050000},
-        {f:108050001,t:108500000},{f:109400001,t:109850000}
+    bs10: [
+        {f: 67250001, t: 67700000},
+        {f: 69050001, t: 69500000},
+        {f: 69500001, t: 69950000},
+        {f: 69950001, t: 70400000},
+        {f: 70400001, t: 70850000},
+        {f: 70850001, t: 71300000},
+        {f: 76310012, t: 85139995},
+        {f: 86400001, t: 86850000},
+        {f: 90900001, t: 91350000},
+        {f: 91800001, t: 92250000}
     ],
-    bs20:[
-        {f:87280145,t:91646549},{f:96650001,t:97100000},
-        {f:99800001,t:100250000},{f:100250001,t:100700000},
-        {f:109250001,t:109700000},{f:110600001,t:111050000},
-        {f:111050001,t:111500000},{f:111950001,t:112400000},
-        {f:112400001,t:112850000},{f:112850001,t:113300000},
-        {f:114200001,t:114650000},{f:114650001,t:115100000},
-        {f:115100001,t:115550000},{f:118700001,t:119150000},
-        {f:119150001,t:119600000},{f:120500001,t:120950000}
+    bs20: [
+        {f: 87280145, t: 91646549},
+        {f: 96650001, t: 97100000},
+        {f: 99800001, t: 100250000},
+        {f: 100250001, t: 100700000},
+        {f: 109250001, t: 109700000},
+        {f: 110600001, t: 111050000},
+        {f: 111050001, t: 111500000},
+        {f: 111950001, t: 112400000},
+        {f: 112400001, t: 112850000},
+        {f: 112850001, t: 113300000},
+        {f: 114200001, t: 114650000},
+        {f: 114650001, t: 115100000},
+        {f: 115100001, t: 115550000},
+        {f: 118700001, t: 119150000},
+        {f: 119150001, t: 119600000},
+        {f: 120500001, t: 120950000}
     ],
-    bs50:[
-        {f:67250001,t:67700000},{f:69050001,t:69500000},
-        {f:69500001,t:69950000},{f:69950001,t:70400000},
-        {f:70400001,t:70850000},{f:70850001,t:71300000},
-        {f:76310012,t:85139995},{f:86400001,t:86850000},
-        {f:90900001,t:91350000},{f:91800001,t:92250000}
+    bs50: [
+        {f: 77100001, t: 77550000},
+        {f: 78000001, t: 78450000},
+        {f: 78900001, t: 96350000},
+        {f: 96350001, t: 96800000},
+        {f: 96800001, t: 97250000},
+        {f: 98150001, t: 98600000},
+        {f: 104900001, t: 105350000},
+        {f: 105350001, t: 105800000},
+        {f: 106700001, t: 107150000},
+        {f: 107600001, t: 108050000},
+        {f: 108050001, t: 108500000},
+        {f: 109400001, t: 109850000}
     ]
 };
 
-function validarBillete(){
-    const tipo=document.getElementById('tipoBillete').value;
-    const serie=parseInt(document.getElementById('serialInput').value);
-    const res=document.getElementById('result');
+const serialInput = document.getElementById('serialInput');
+const charCount = document.getElementById('charCount');
 
-    if(isNaN(serie)||document.getElementById('serialInput').value.trim()===''){
-        res.style.display='block';
-        res.className='result danger';
-        res.innerHTML='<span class="icon">⚠️</span><span class="title-line">Ingresá un número de serie válido</span>';
+function handleSerialInput(el) {
+    // Only allow digits
+    el.value = el.value.replace(/\D/g, '').substring(0, 9);
+    const len = el.value.length;
+    charCount.textContent = len + '/9';
+    charCount.className = 'char-count' + (len === 9 ? ' complete' : len > 9 ? ' over' : '');
+    updateSteps();
+}
+
+function updateSteps() {
+    const tipo = document.getElementById('tipoBillete').value;
+    const len = serialInput.value.length;
+    const s1 = document.getElementById('step1');
+    const s2 = document.getElementById('step2');
+    const s3 = document.getElementById('step3');
+
+    // Reset
+    s1.className = 'step'; s2.className = 'step'; s3.className = 'step';
+
+    if (!tipo) {
+        s1.className = 'step active';
+    } else if (len < 9) {
+        s1.className = 'step done';
+        s2.className = 'step active';
+    } else {
+        s1.className = 'step done';
+        s2.className = 'step done';
+        s3.className = 'step active';
+    }
+}
+
+function padSerie(num) {
+    return String(num).padStart(9, '0');
+}
+
+function validarBillete() {
+    const tipo = document.getElementById('tipoBillete').value;
+    const raw = serialInput.value.replace(/\D/g, '');
+    const res = document.getElementById('result');
+
+    if (!tipo) {
+        res.style.display = 'block';
+        res.className = 'result danger';
+        res.innerHTML = '<span class="icon">☝️</span><span class="title-line">Primero seleccioná el corte del billete</span><div class="detail">¿Es de Bs 10, Bs 20 o Bs 50?</div>';
         return;
     }
 
-    const nombres={bs10:'Bs 10',bs20:'Bs 20',bs50:'Bs 50'};
-    const ilegal=database[tipo].some(r=>serie>=r.f&&serie<=r.t);
+    if (raw.length < 7) {
+        res.style.display = 'block';
+        res.className = 'result danger';
+        res.innerHTML = '<span class="icon">✏️</span><span class="title-line">Ingresá el número de serie completo</span><div class="detail">Son 9 dígitos. Buscalo en tu billete Serie B, suele estar en la parte inferior.</div>';
+        return;
+    }
 
-    res.style.display='block';
+    const serie = parseInt(raw);
+    const nombres = { bs10: 'Bs 10', bs20: 'Bs 20', bs50: 'Bs 50' };
+    const ilegal = database[tipo].some(r => serie >= r.f && serie <= r.t);
+    const serieFormateada = padSerie(serie);
 
-    if(ilegal){
-        res.className='result danger';
-        res.innerHTML=`
+    // Update step 3
+    document.getElementById('step1').className = 'step done';
+    document.getElementById('step2').className = 'step done';
+    document.getElementById('step3').className = 'step done';
+
+    res.style.display = 'block';
+
+    if (ilegal) {
+        res.className = 'result danger';
+        res.innerHTML = `
             <span class="icon">⛔</span>
-            <span class="title-line">BILLETE SUSTRAÍDO — SIN VALOR LEGAL</span>
-            <div class="detail">${nombres[tipo]} · Serie B · N° ${serie.toLocaleString()}</div>
+            <span class="title-line">BILLETE SUSTRAÍDO</span>
+            <div class="detail">${nombres[tipo]} · Serie B · N° ${serieFormateada}</div>
             <div class="action">
-                Este billete está dentro de los intervalos de billetes sustraídos ilegalmente.
-                <strong>No tiene validez legal y no debe ser aceptado.</strong><br><br>
-                Si lo recibiste de buena fe, podrás canjearlo en el sistema financiero cuando el BCB anuncie el calendario de canje.
+                Este billete <strong>está dentro de los intervalos de billetes sustraídos</strong> ilegalmente según el comunicado del BCB.<br><br>
+                ❌ No tiene validez legal<br>
+                ❌ No debe ser aceptado en transacciones<br><br>
+                Si lo recibiste sin saber, acudí al sistema financiero cuando se anuncie el calendario de canje del BCB.
             </div>`;
-    }else{
-        res.className='result safe';
-        res.innerHTML=`
+    } else {
+        res.className = 'result safe';
+        res.innerHTML = `
             <span class="icon">✅</span>
-            <span class="title-line">SERIE NO FIGURA COMO SUSTRAÍDA</span>
-            <div class="detail">${nombres[tipo]} · Serie B · N° ${serie.toLocaleString()}</div>
+            <span class="title-line">NO FIGURA COMO SUSTRAÍDO</span>
+            <div class="detail">${nombres[tipo]} · Serie B · N° ${serieFormateada}</div>
             <div class="action">
-                Este número <strong>no está</strong> en los intervalos de billetes sustraídos.<br><br>
-                <strong>Recordá:</strong> Todos los Bs 10, 20 y 50 Serie B están inhabilitados temporalmente, pero si lo obtuviste legalmente <strong>no perderás su valor</strong>. Podrás canjearlo según el calendario que anunciará el BCB.
+                Este número de serie <strong>no está en los intervalos de billetes sustraídos</strong>.<br><br>
+                ✔ Tu billete no fue robado<br><br>
+                <strong>Recordá:</strong> Aunque no fue sustraído, los cortes Bs 10, 20 y 50 Serie B están inhabilitados temporalmente por el BCB. Si lo obtuviste legalmente <strong>no perderás su valor</strong> y podrás canjearlo según el calendario que anunciará el BCB.
             </div>`;
     }
 }
 
-// Enter key triggers verification
-document.getElementById('serialInput').addEventListener('keydown',function(e){
-    if(e.key==='Enter')validarBillete();
+// Enter key
+serialInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') validarBillete();
 });
+
+// Init
+updateSteps();
 </script>
 
 </body>
